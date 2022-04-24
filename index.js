@@ -40,7 +40,7 @@ app.get('/score', (req, res) => {
 });
 
 app.get('/score/:page', (req, res) => {
-    Score.find().sort({ 'score': -1 }).skip(req.params.page * 10).limit(10)
+    Score.find().sort({ 'score': -1 }).skip(req.params.page * 10).limit(11)
         .then((result) => {
             res.send(result);
         })
