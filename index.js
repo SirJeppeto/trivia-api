@@ -2,6 +2,7 @@ require('dotenv').config({silent: true});
 
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 const mongoose = require('mongoose');
 const Score = require('./models/score');
@@ -24,6 +25,10 @@ app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-api-key')
     next()
 });
+
+app.use(cors({
+    origin: '*'
+}));
 
 app.get('/', (req, res) => {
     res.send('Hello!');
