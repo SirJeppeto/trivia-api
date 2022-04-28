@@ -20,7 +20,9 @@ const DB_LOCATION = process.env.DB_LOCATION;
 const dbConnect = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_LOCATION}/${DB_NAME}?retryWrites=true&w=majority`;
 
 const escape = text => {
-    return text.replace(/'|\$|\[|\]/g, "\\$&"); 
+    let temp = text;
+    
+    return temp.replace(/'|\$|\[|\]/g, "\\$&");
 };
 
 app.use(express.json());
