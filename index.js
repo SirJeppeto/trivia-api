@@ -15,8 +15,9 @@ const API_KEY = process.env.API_KEY;
 const DB_NAME = process.env.DB_NAME;
 const DB_USERNAME = process.env.DB_USERNAME;
 const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_LOCATION = process.env.DB_LOCATION;
 
-const dbConnect = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@trivia.q7o0m.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`;
+const dbConnect = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_LOCATION}/${DB_NAME}?retryWrites=true&w=majority`;
 
 app.use(express.json());
 
@@ -45,7 +46,7 @@ app.get('/score', (req, res) => {
 });
 
 app.get('/score/:page', (req, res) => {
-    Score.find().sort({ 'score': -1 }).skip(req.params.page * 10).limit(11)
+    Score.find().sort([['score', -1], ['createdAt', 1]]).skip(req.params.page * 10).limit(11)
         .then((result) => {
             res.send(result);
         })
