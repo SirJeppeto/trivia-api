@@ -19,12 +19,6 @@ const DB_LOCATION = process.env.DB_LOCATION;
 
 const dbConnect = `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@${DB_LOCATION}/${DB_NAME}?retryWrites=true&w=majority`;
 
-const escape = text => {
-    let temp = text;
-    
-    return temp.replace(/'|\$|\[|\]/g, "\\$&");
-};
-
 app.use(express.json());
 
 app.use(function (req, res, next) {
@@ -72,10 +66,7 @@ app.use((req, res, next) => {
 });
 
 app.post('/score', (req, res) => {
-    const score = new Score({
-        username: escape(req.body.username),
-        score: escape(req.body.score)
-    });
+    const score = new Score({...req.body});
 
     score.save()
         .then((result) => {
