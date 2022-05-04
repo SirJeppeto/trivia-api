@@ -7,6 +7,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const Score = require('./models/score');
 const Question = require('./models/question');
+const User = require('./models/user');
 
 const PORT = process.env.PORT;
 
@@ -41,7 +42,7 @@ app.get('/score', (req, res) => {
             res.send(result);
         })
         .catch((err) =>  {
-            console.log(err);
+            res.status(400).json({ error: 'something went wrong' });
         });
 });
 
@@ -51,7 +52,7 @@ app.get('/score/:page', (req, res) => {
             res.send(result);
         })
         .catch((err) =>  {
-            console.log(err);
+            res.status(400).json({ error: 'something went wrong' });
         })
 });
 
@@ -73,7 +74,19 @@ app.post('/score', (req, res) => {
             res.send(result);
         })
         .catch((err) =>  {
-            console.log(err);
+            res.status(400).json({ error: 'something went wrong' });
+        })
+});
+
+app.post('/user', (req, res) => {
+    const user = {...req.body};
+
+    User.findOne({ username: user.username, password: user.password })
+        .then((result) => {
+            res.send({ username: result.username });
+        })
+        .catch((err) =>  {
+            res.status(400).json({ error: 'something went wrong' });
         })
 });
 
@@ -83,7 +96,42 @@ app.get('/question', (req, res) => {
             res.send(result);
         })
         .catch((err) =>  {
-            console.log(err);
+            res.status(400).json({ error: 'something went wrong' });
+        })
+});
+
+app.put('/question/:id', (req, res) => {
+    Question.findById(req.params.id)
+        .then((result) => {
+            Question.findByIdAndUpdate(req.params.id, {...req.body})
+                .then((result) => {
+                    res.send(result);
+                })
+                .catch((err) =>  {
+                    res.status(400).json({ error: 'something went wrong' });
+                })
+        })
+        .catch((err) =>  {
+            const question = new Question({...req.body});
+
+            question.save()
+                .then((result) => {
+                    res.send(result);
+                })
+                .catch((err) =>  {
+                    res.status(400).json({ error: 'something went wrong' });
+                })
+        })
+
+});
+
+app.delete('/question/:id', (req, res) => {
+    Question.findByIdAndDelete(req.params.id)
+        .then((result) => {
+            res.send(result);
+        })
+        .catch((err) =>  {
+            res.status(400).json({ error: 'something went wrong' });
         })
 });
 
@@ -93,7 +141,7 @@ app.get('/question/random', (req, res) => {
             res.send(result);
         })
         .catch((err) =>  {
-            console.log(err);
+            res.status(400).json({ error: 'something went wrong' });
         })
 });
 
@@ -110,7 +158,7 @@ app.get('/question/random/:size', (req, res) => {
             res.send(result);
         })
         .catch((err) =>  {
-            console.log(err);
+            res.status(400).json({ error: 'something went wrong' });
         })
 });
 
@@ -121,5 +169,5 @@ mongoose.connect(dbConnect, { useNewUrlParser: true, useUnifiedTopology: true })
         })
     })
     .catch((err) => {
-        console.log(err);
+        res.status(400).json({ error: 'something went wrong' });
     });
